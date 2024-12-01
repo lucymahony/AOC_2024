@@ -1,5 +1,4 @@
 # Day_1
-# Given two lists, sort them and sum the difference of the values at each index 
 import numpy as np 
 
 def read_in_input(input_file_path):
@@ -10,7 +9,6 @@ def read_in_input(input_file_path):
     if df.shape[1] != 2:
         raise ValueError('There should be 2 columns of the dataset')
     return df
-
 
 
 def sum_pairwise_difference(df):
@@ -28,14 +26,12 @@ def sum_pairwise_difference(df):
     return sum_diff
 
 
-
 def similarity_score_freq(df):
     """
     Input: df = dataframe with two columns
     Output: int of similarity score 
 
     Similarity score = The sum of the frequence of each int in column 1 in column 2 multiplied by its value 
-
     """
 
     # function to get the frequency in column 2 df[:, 1] gets all the second column values. : = all rows ,1 = the second column
@@ -48,7 +44,7 @@ def similarity_score_freq(df):
     return sum(similarity_scores)
 
 
-if __name__ == "__main__":
+def run_tests():
     # Test dataset
     test_df = np.array([[1, 2],
                          [3, 4], 
@@ -65,6 +61,10 @@ if __name__ == "__main__":
     if test_output_part_b == test_result_part_b:
         print('Test works for part b ')
     else: print(f'Error : {test_output_part_b}')
+
+
+if __name__ == "__main__":
+    run_tests()
 
     # AOC dataset
     input_file_path = '/Users/mahony/Downloads/aoc_2024_day_1.txt'
