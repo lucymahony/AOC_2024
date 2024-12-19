@@ -79,14 +79,30 @@ def count_trails(puzzel_map, puzzel_graph, start_location):
     return number_trails
 
 
+def score_trails(puzzel_map, puzzel_graph, start_location):
+    """
+    Builds on depth_first_search()
+    For each 9 that you can get to we want to know the 'rating' e.g. how many ways we can get there
+    total_paths is a counter of the number of ways you can go between 0 and 9 
+    """
 
-
-
-
-
-
-
-
+    def depth_first_search(node, visited, path_count):
+        if node in visited:
+            return 0
+        visited.add(node) # Add curent node to the list of those visited
+        if puzzel_map[node] == 9: 
+            return 1
+        count = 0 # if node = 9 add it to the set of possible 9's you can get to e.g. trail_ends
+        for neighbor in puzzel_graph[node]: # Go through all neighbors at that node 
+            if neighbor not in visited and puzzel_map[neighbor] == puzzel_map[node] + 1: # if the neighbour hasnt been visited and is 1 more then proceed
+                count += depth_first_search(neighbor, visited.copy(), path_count) # Recursively perform this function
+        return count
+    total_paths = 0
+    for start in start_location:
+        # Reset the locations visited and the number of trail ends for each new start location. 
+        visited = set() # Rather than a set its now a list so rather than all the unique 9's we want the duplicates
+        total_paths += depth_first_search(start, visited, 0) # The path_count is intial 0
+    return total_paths
 
 
 def test_datasets():
@@ -107,17 +123,20 @@ def test_datasets():
     start = start_locations(puzzle_map)
     puzzle_graph = build_graph(puzzle_map)
     count = count_trails(puzzle_map, puzzle_graph, start)
-    return puzzle_map, start, puzzle_graph, count
+    score = score_trails(puzzle_map, puzzle_graph, start)
+    return puzzle_map, start, puzzle_graph, count, score
 
 def run_tests_part_1():
-    puzzle_map, start, puzzle_graph, count = test_datasets()
+    puzzle_map, start, puzzle_graph, count, score = test_datasets()
     print(f'Test {count}')
     if count == 36:
         return True 
     
 def run_test_part_2():
-    puzzle_map, start, puzzle_graph, count = test_datasets()
-    pass
+    puzzle_map, start, puzzle_graph, count, score = test_datasets()
+    print(score)
+    if score == 81:
+        return True
 
 
 def main():
@@ -127,7 +146,11 @@ def main():
     puzzle_graph = build_graph(puzzle_map)
     count = count_trails(puzzle_map, puzzle_graph, start)
     print(f'Part 1 = {count}')
+    score = score_trails(puzzle_map, puzzle_graph, start)
+    print(f'Part 2 = {score}')
+
 
 if __name__ == "__main__":
     if run_tests_part_1():
-        main()
+        if run_test_part_2():
+            main()
