@@ -42,15 +42,20 @@ def blinking(original_stones, number_blinks):
     return len(stones)
 
 def faster_blinking(original_stones, number_blinks):
-    # Make a dict 
-    stones: dict[str, int] = {k: 1 for k in original_stones}
+    """
+    By using a dictionary computations on stones with the same number aren't unncessarily repeated
+    The dictionary key - the number of the stone, value = the number of stones with that value
+    """
+
+    stones: dict[str, int] = {k: 1 for k in original_stones} # There is one stone of each in the input
     for _ in tqdm(range(number_blinks)):
-        new_stones = defaultdict(int)
+        new_stones = defaultdict(int) # Blank default dict 
         for stone, num in stones.items():
             for new_stone in permute_stone(stone):
-                new_stones[new_stone] += num
+                new_stones[new_stone] += num # Increase the count by the value from the permute_stone for each stone 
+                #- for this step its important that defaultdict() rather than dict() to be able to add unscene values without KeyError
         stones = new_stones
-    return sum(stones.values())
+    return sum(stones.values()) # Sum all the values in the dict e.g. all the stone counts 
 
 
 def test_part_1():
